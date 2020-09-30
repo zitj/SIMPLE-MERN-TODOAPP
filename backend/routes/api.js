@@ -4,6 +4,13 @@ const TaskPost = require('../models/taskPost');
 
 
 // Routes
+router.post('/save', (req, res) =>{
+    console.log('Body: ', req.body);
+    res.json({
+        msg:'We received your data!'
+    });
+});
+
 router.get('/', (req, res) =>{
     TaskPost.find({ })
     .then((data) =>{
