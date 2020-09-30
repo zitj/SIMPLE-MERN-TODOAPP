@@ -5,7 +5,24 @@ class App extends React.Component{
 
 state = {
   task: '',
+  posts: []
 };
+
+componentDidMount = () =>{
+  this.getTaskPost();
+};
+
+getTaskPost = () =>{
+  axios.get('/api')
+  .then((response) => {
+    const data = response.data;
+    this.setState({ posts:data });
+    console.log('Data has been received!');
+  })
+  .catch(() => {
+    alert('Error retrieving data!');
+  })
+}
 
 handleChange = (event) =>{
   const target = event.target;
@@ -31,13 +48,37 @@ submit = (event) =>{
   })
   .then(() =>{
     console.log('Data has been sent to the server!');
+    this.resetUserInputs();
+    this.getTaskPost();
   })
   .catch(() =>{
     console.log('Internal server error!');
   })
 
+};
+
+resetUserInputs = () =>{
+  this.setState({
+    task: ''
+  });
+};
+
+deleteTask = (id) =>{
+  console.log('Delete id: ' + id);
+  
 }
 
+displayTasks = (posts) =>{
+
+  if(!posts.length) return null;
+
+ return posts.map((post, index) => ( 
+    <div key={index}>
+      <p>{post.task}</p>
+      <button onClick={() => {this.deleteTask(post.task)}}>Delete</button>
+    </div>
+ ));
+};
   render(){
     console.log('State: ', this.state);
     return(
@@ -53,6 +94,9 @@ submit = (event) =>{
            />
            <button onClick={this.submit}>Add task</button>
         </form>
+        <div className="task">
+          {this.displayTasks(this.state.posts)}
+        </div>
       </div>
     );
 

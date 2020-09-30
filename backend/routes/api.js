@@ -6,8 +6,18 @@ const TaskPost = require('../models/taskPost');
 // Routes
 router.post('/save', (req, res) =>{
     console.log('Body: ', req.body);
-    res.json({
-        msg:'We received your data!'
+    const data = req.body;
+    const newTaskPost = new TaskPost(data);
+
+    newTaskPost.save((error) =>{
+        if(error){
+            res.status(500).json({msg:'Sorry, internal server errors'});
+        }
+        else{
+            res.json({
+                msg: 'Your data has been saved!'
+            });
+        }
     });
 });
 
